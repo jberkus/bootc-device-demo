@@ -1,0 +1,52 @@
+# bootc-image-builder config for bootc demo
+# thanks to xiaofwan for templates
+
+[customizations.installer.kickstart]
+contents = """
+# bootc demo installation
+text --non-interactive
+
+# Keyboard and language - set early to avoid locale errors
+lang en_US.UTF-8
+keyboard us
+
+# Timezone
+timezone America/Los_Angeles --utc
+
+# Network (static address on first available link)
+network --bootproto=static --ip=10.0.1.10 --netmask=255.255.255.0 --gateway=10.0.1.254 --nameserver=1.0.0.1,8.8.8.8 --device=link --activate --onboot=on --hostname=bootcdemo
+
+# Autopartition
+clearpart --all
+autopart --type=plain --fstype=xfs
+
+# Root password (same as user - change after first login)
+rootpw --plaintext root
+
+# Reboot after installation
+reboot
+
+# Post-installation: modify container repo setup for demo
+%post --nochroot --log=/mnt/sysroot/var/log/kickstart-post.log
+cat >/etc/containers/registries.conf.d/10-local-insecure.conf <<EOF
+[[registry]]
+location="10.1.0.1:8000"
+insecure=true
+EOF
+%end
+"""
+
+# Anaconda modules - Users enabled for rootpw command
+[customizations.installer.modules]
+enable = [
+  "org.fedoraproject.Anaconda.Modules.Network",
+  "org.fedoraproject.Anaconda.Modules.Payloads",
+  "org.fedoraproject.Anaconda.Modules.Storage",
+  "org.fedoraproject.Anaconda.Modules.Timezone",
+  "org.fedoraproject.Anaconda.Modules.Localization",
+  "org.fedoraproject.Anaconda.Modules.Users"
+]
+
+# ISO label
+[customizations.iso]
+volume_id = "BOOTCDEMO"
