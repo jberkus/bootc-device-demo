@@ -26,16 +26,6 @@ rootpw --plaintext root
 # Reboot after installation
 reboot
 
-# Post-installation: modify container repo setup for demo
-%post --nochroot --log=/mnt/sysroot/var/log/kickstart-post.log
-cat >/etc/containers/registries.conf.d/10-local-insecure.conf <<EOF
-[[registry]]
-location="10.1.0.1:8000"
-insecure=true
-EOF
-%end
-"""
-
 # Anaconda modules - Users enabled for rootpw command
 [customizations.installer.modules]
 enable = [
