@@ -51,7 +51,7 @@ bootc status
 
 ## 2nd Update
 
-For this update, we're going to try to apply the update without a full reboot.
+For this update, we're going to try to apply the update without a full reboot for less downtime.
 
 On the laptop, make a change to index.html, any kind of update you want.  I suggest updating "version" to "3".  Save.
 
@@ -63,10 +63,10 @@ podman push 10.0.1.1:8000/httpd
 On the ssh connection:
 
 ```
-bootc update --apply
+bootc update --apply --soft-reboot=auto
 ```
 
-This should do a "soft reboot". Immediately check http://10.0.1.10. Then, on ssh:
+This should do a "soft reboot". Check http://10.0.1.10 in 5 seconds. Then, on ssh:
 
 ```
 bootc status
@@ -86,7 +86,7 @@ podman push 10.0.1.1:8000/httpd
 Don't test or check it this time.  Instead:
 
 ```
-bootc update --apply
+bootc update --apply --soft-reboot=auto
 bootc status
 ```
 
